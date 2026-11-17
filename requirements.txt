@@ -1,0 +1,22 @@
+# --- Веб-фреймворк и сервер ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9      # загрузка файлов (фото к заявкам)
+
+# --- База данных ---
+SQLAlchemy>=2.0
+alembic>=1.13
+psycopg[binary]>=3.2         # драйвер PostgreSQL для SQLAlchemy (postgresql+psycopg://)
+
+# --- Валидация и конфигурация ---
+pydantic>=2.7
+pydantic-settings>=2.3
+email-validator>=2.1
+
+# --- Аутентификация (JWT + хеширование паролей) ---
+PyJWT>=2.8
+bcrypt>=4.1
+
+# --- Тестирование ---
+pytest>=8.0
+httpx>=0.27                  # нужен для fastapi.testclient.TestClient
