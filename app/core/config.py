@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     debug: bool = False
     api_prefix: str = "/api"
 
-    database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/repair_shop"
+    database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5433/repair_shop"
     db_echo: bool = False
 
     cors_origins: list[str] = ["http://localhost:5500", "http://127.0.0.1:5500"]

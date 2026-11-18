@@ -24,7 +24,12 @@ from app.schemas.request import (
     RequestPhotoRead,
     StatusHistoryRead,
 )
-from app.schemas.service import ServiceCreate, ServiceRead, ServiceUpdate
+from app.schemas.service import (
+    ServiceCreate,
+    ServiceListResponse,
+    ServiceRead,
+    ServiceUpdate,
+)
 from app.schemas.user import (
     LoginRequest,
     TokenResponse,
@@ -53,6 +58,7 @@ __all__ = [
     "RequestPhotoCreate",
     "RequestPhotoRead",
     "ServiceCreate",
+    "ServiceListResponse",
     "ServiceRead",
     "ServiceUpdate",
     "StatusHistoryRead",

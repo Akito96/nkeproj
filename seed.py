@@ -2,11 +2,11 @@ import argparse
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
-import bcrypt
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
+from app.core.security import hash_password
 from app.models import (
     MasterComment,
     MovementType,
@@ -23,10 +23,6 @@ from app.models import (
 )
 
 DEFAULT_PASSWORD = "Password123!"
-
-
-def _hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(rounds=10)).decode("utf-8")
 
 
 def _clear_database(db: Session) -> None:
@@ -56,7 +52,7 @@ def seed_database(db: Session, reset: bool = False) -> dict[str, int]:
             "requests": 0,
         }
 
-    password_hash = _hash_password(DEFAULT_PASSWORD)
+    password_hash = hash_password(DEFAULT_PASSWORD)
 
     admin = User(
         full_name="Алексей Соколов",

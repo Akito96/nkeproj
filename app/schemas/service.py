@@ -91,3 +91,13 @@ class ServiceRead(BaseModel):
     base_price: Decimal
     warranty_days: int
     is_active: bool
+
+
+class ServiceListResponse(BaseModel):
+    """Постраничный список ремонтных услуг."""
+
+    items: list[ServiceRead]
+    total: int
+    page: int
+    size: int
+    pages: int

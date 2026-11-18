@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
-from app.routers import health
+from app.routers import auth, health, orders, services
 
 
 def create_app() -> FastAPI:
@@ -25,6 +25,12 @@ def create_app() -> FastAPI:
     app.mount("/uploads", StaticFiles(directory=upload_dir), name="uploads")
 
     app.include_router(health.router, prefix=settings.api_prefix)
+    app.include_router(auth.router, prefix=settings.api_prefix)
+    app.include_router(services.router, prefix=settings.api_prefix)
+    app.include_router(orders.router, prefix=settings.api_prefix)
+    app.include_router(auth.router, include_in_schema=False)
+    app.include_router(services.router, include_in_schema=False)
+    app.include_router(orders.router, include_in_schema=False)
 
     return app
 
