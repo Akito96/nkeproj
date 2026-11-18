@@ -9,7 +9,7 @@ from app.schemas.common import (
     validate_positive_int,
     validate_text_length,
 )
-from app.schemas.part import RequestPartRead
+from app.schemas.part import RequestPartCreate, RequestPartRead
 
 
 class StatusHistoryRead(BaseModel):
@@ -283,3 +283,72 @@ class RepairRequestDetailRead(RepairRequestRead):
     comments: list[MasterCommentRead] = []
     photos: list[RequestPhotoRead] = []
     used_parts: list[RequestPartRead] = []
+
+
+class OrderAssignMasterRequest(BaseModel):
+    """Схема назначения мастера на заявку."""
+
+    master_id: int
+
+    @field_validator("master_id")
+    @classmethod
+    def check_master_id(cls, value: int) -> int:
+        return validate_positive_int(value, "Идентификатор мастера")
+
+
+class OrderPartsAndLaborRequest(BaseModel):
+    """Схема фиксации использованных запчастей, диагностики и стоимости работ."""
+
+    labor_cost: Decimal | None = None
+    diagnostic_result: str | None = None
+    parts: list[RequestPartCreate] = []
+    part_id: int | None = None
+    quantity: int = 1
+    unit_price: Decimal | None = None
+
+    @field_validator("labor_cost")
+    @classmethod
+    def check_labor_cost(cls, value: Decimal | None) -> Decimal | None:
+        if value is None:
+            return None
+        return validate_non_negative_decimal(value, "Стоимость работ")
+
+    @field_validator("diagnostic_result")
+    @classmethod
+    def check_diagnostic_result(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return validate_text_length(value, "Результат диагностики", min_len=1)
+
+    @field_validator("part_id")
+    @classmethod
+    def check_part_id(cls, value: int | None) -> int | None:
+        if value is None:
+            return None
+        return validate_positive_int(value, "Идентификатор запчасти")
+
+    @field_validator("quantity")
+    @classmethod
+    def check_quantity(cls, value: int) -> int:
+        return validate_positive_int(value, "Количество")
+
+    @field_validator("unit_price")
+    @classmethod
+    def check_unit_price(cls, value: Decimal | None) -> Decimal | None:
+        if value is None:
+            return None
+        return validate_non_negative_decimal(value, "Цена за единицу")
+
+    @model_validator(mode="after")
+    def check_not_empty(self) -> "OrderPartsAndLaborRequest":
+        """Проверяет, что передано хотя бы одно поле для обновления."""
+        if (
+            self.labor_cost is None
+            and self.diagnostic_result is None
+            and not self.parts
+            and self.part_id is None
+        ):
+            raise ValueError(
+                "Укажите стоимость работ, результат диагностики или список запчастей"
+            )
+        return self

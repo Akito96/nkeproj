@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from app.models.base import MovementType
 from app.schemas.common import (
@@ -133,6 +133,13 @@ class PartRead(BaseModel):
     retail_price: Decimal
     stock_qty: int
     min_stock_qty: int
+    is_low_stock: bool = False
+
+    @model_validator(mode="after")
+    def populate_low_stock(self) -> "PartRead":
+        """Вычисляет флаг низкого остатка на складе."""
+        self.is_low_stock = self.stock_qty <= self.min_stock_qty
+        return self
 
 
 class RequestPartCreate(BaseModel):

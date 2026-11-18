@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
-from app.routers import auth, health, orders, services
+from app.routers import admin, auth, health, inventory, master, orders, services
 
 
 def create_app() -> FastAPI:
@@ -28,9 +28,15 @@ def create_app() -> FastAPI:
     app.include_router(auth.router, prefix=settings.api_prefix)
     app.include_router(services.router, prefix=settings.api_prefix)
     app.include_router(orders.router, prefix=settings.api_prefix)
+    app.include_router(master.router, prefix=settings.api_prefix)
+    app.include_router(inventory.router, prefix=settings.api_prefix)
+    app.include_router(admin.router, prefix=settings.api_prefix)
     app.include_router(auth.router, include_in_schema=False)
     app.include_router(services.router, include_in_schema=False)
     app.include_router(orders.router, include_in_schema=False)
+    app.include_router(master.router, include_in_schema=False)
+    app.include_router(inventory.router, include_in_schema=False)
+    app.include_router(admin.router, include_in_schema=False)
 
     return app
 
