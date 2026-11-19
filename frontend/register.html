@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация клиента — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/register.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <section class="auth-shell card" aria-labelledby="register-title">
+      <h1 id="register-title" class="auth-card__title">Регистрация клиента</h1>
+      <p class="auth-card__subtitle">Создайте аккаунт для оформления и отслеживания заявок на ремонт</p>
+
+      <div id="register-server-error" class="server-alert" role="alert" hidden></div>
+
+      <form id="register-form" class="form-stack" novalidate>
+        <div class="field">
+          <label for="reg-full-name">ФИО</label>
+          <span id="reg-name-hint" class="hint">Например: Анна Иванова</span>
+          <input
+            type="text"
+            id="reg-full-name"
+            name="full_name"
+            autocomplete="name"
+            minlength="2"
+            maxlength="120"
+            required
+            enterkeyhint="next"
+            aria-describedby="reg-name-hint"
+            data-error="reg-name-error"
+            placeholder="Ваше имя и фамилия"
+          >
+          <div id="reg-name-error" class="error-msg">
+            <span role="img" aria-label="Ошибка">❌</span> ФИО должно содержать минимум 2 символа.
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="reg-email">Электронная почта</label>
+          <span id="reg-email-hint" class="hint">Формат: name@example.com</span>
+          <input
+            type="email"
+            id="reg-email"
+            name="email"
+            autocomplete="username"
+            spellcheck="false"
+            required
+            enterkeyhint="next"
+            aria-describedby="reg-email-hint"
+            data-error="reg-email-error"
+            placeholder="name@example.com"
+          >
+          <div id="reg-email-error" class="error-msg">
+            <span role="img" aria-label="Ошибка">❌</span> Введите корректный адрес электронной почты.
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="reg-phone">Телефон</label>
+          <span id="reg-phone-hint" class="hint">От 7 до 20 символов, например: +7-900-123-45-67</span>
+          <input
+            type="tel"
+            id="reg-phone"
+            name="phone"
+            inputmode="tel"
+            autocomplete="tel"
+            pattern="^\+?[\d\s\-()]{7,20}$"
+            required
+            enterkeyhint="next"
+            aria-describedby="reg-phone-hint"
+            data-error="reg-phone-error"
+            placeholder="+7-900-123-45-67"
+          >
+          <div id="reg-phone-error" class="error-msg">
+            <span role="img" aria-label="Ошибка">❌</span> Укажите корректный номер телефона (7–20 символов).
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="reg-password">Пароль</label>
+          <ul id="reg-password-rules" class="rules-list">
+            <li>Минимум 6 символов</li>
+            <li>Не более 128 символов</li>
+          </ul>
+          <div class="input-group">
+            <input
+              type="password"
+              id="reg-password"
+              name="password"
+              autocomplete="new-password"
+              minlength="6"
+              maxlength="128"
+              required
+              enterkeyhint="done"
+              aria-describedby="reg-password-rules"
+              data-error="reg-password-error"
+              placeholder="Придумайте пароль"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              aria-controls="reg-password"
+              aria-pressed="false"
+              aria-label="Показать пароль"
+            >Показать</button>
+          </div>
+          <div id="reg-password-error" class="error-msg">
+            <span role="img" aria-label="Ошибка">❌</span> Пароль должен содержать от 6 до 128 символов.
+          </div>
+        </div>
+
+        <button id="register-submit" type="submit" class="btn btn--primary btn--full">Создать аккаунт</button>
+      </form>
+
+      <p class="auth-footer">
+        Уже зарегистрированы? <a href="login.html">Войти в систему</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Ремонтная мастерская</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

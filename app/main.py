@@ -24,6 +24,14 @@ def create_app() -> FastAPI:
     upload_dir.mkdir(parents=True, exist_ok=True)
     app.mount("/uploads", StaticFiles(directory=upload_dir), name="uploads")
 
+    frontend_dir = Path("frontend")
+    if frontend_dir.is_dir():
+        app.mount(
+            "/app",
+            StaticFiles(directory=frontend_dir, html=True),
+            name="frontend",
+        )
+
     app.include_router(health.router, prefix=settings.api_prefix)
     app.include_router(auth.router, prefix=settings.api_prefix)
     app.include_router(services.router, prefix=settings.api_prefix)

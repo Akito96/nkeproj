@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог услуг — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/services.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <section class="section__header">
+      <div>
+        <h1 class="section__title">Каталог ремонтных услуг</h1>
+        <p class="section__subtitle">Поиск по названию, фильтр по типу техники и гарантийные сроки</p>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <form id="services-search-form" class="search-box" role="search">
+        <label class="visually-hidden" for="services-search">Поиск услуги</label>
+        <input
+          id="services-search"
+          class="input"
+          type="search"
+          name="search"
+          placeholder="Например: замена дисплея, чистка ноутбука..."
+          enterkeyhint="search"
+        >
+        <button class="btn btn--primary" type="submit">Найти</button>
+      </form>
+
+      <div id="category-chips" class="chips" role="group" aria-label="Фильтр по категории">
+        <button type="button" class="chip" data-category="" aria-pressed="true">Все</button>
+        <button type="button" class="chip" data-category="Смартфоны" aria-pressed="false">Смартфоны</button>
+        <button type="button" class="chip" data-category="Ноутбуки" aria-pressed="false">Ноутбуки</button>
+        <button type="button" class="chip" data-category="Пайка BGA" aria-pressed="false">Пайка BGA</button>
+        <button type="button" class="chip" data-category="Планшеты" aria-pressed="false">Планшеты</button>
+        <button type="button" class="chip" data-category="ПК" aria-pressed="false">ПК</button>
+      </div>
+    </div>
+
+    <div id="services-list" class="price-list" aria-live="polite">
+      <div class="skeleton-row" aria-hidden="true"></div>
+      <div class="skeleton-row" aria-hidden="true"></div>
+      <div class="skeleton-row" aria-hidden="true"></div>
+    </div>
+
+    <nav id="services-pagination" class="pagination" aria-label="Навигация по страницам" hidden>
+      <button id="prev-page-btn" type="button" class="btn btn--outline btn--sm">Назад</button>
+      <span id="pagination-info" class="pagination__info"></span>
+      <button id="next-page-btn" type="button" class="btn btn--outline btn--sm">Вперёд</button>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Ремонтная мастерская</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

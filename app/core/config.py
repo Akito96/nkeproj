@@ -19,7 +19,12 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5433/repair_shop"
     db_echo: bool = False
 
-    cors_origins: list[str] = ["http://localhost:5500", "http://127.0.0.1:5500"]
+    cors_origins: list[str] = [
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
 
     upload_dir: str = "uploads"
     max_upload_size_mb: int = 10

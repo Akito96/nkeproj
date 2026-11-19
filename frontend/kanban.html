@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban-доска заявок — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/kanban.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <div class="section__header">
+      <div>
+        <h1 class="section__title">Kanban-доска заявок</h1>
+        <p class="section__subtitle">Перетаскивайте карточки между колонками для перевода заявки на следующий этап</p>
+      </div>
+      <div class="hero__actions">
+        <a class="btn btn--outline btn--sm" href="stats.html">Статистика</a>
+        <a class="btn btn--outline btn--sm" href="admin.html">Таблицы админа</a>
+        <button type="button" id="kanban-refresh-btn" class="btn btn--primary btn--sm">Обновить</button>
+      </div>
+    </div>
+
+    <div class="kanban-hint">
+      <span>Допустимая цепочка переходов: <strong>Принята → В диагностике → В ремонте → Готова к выдаче → Выдана</strong>.</span>
+      <span class="field__hint">При недопустимом переносе или ошибке API карточка автоматически вернётся в исходную колонку.</span>
+    </div>
+
+    <section class="toolbar" aria-label="Фильтры доски" style="margin-block-end: 1rem;">
+      <search>
+        <form id="kanban-filter-form" class="search-form">
+          <input
+            type="search"
+            id="kanban-search-input"
+            class="field__control"
+            placeholder="Поиск по № заявки, устройству или описанию..."
+            aria-label="Поиск карточек на Kanban-доске"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+          >
+          <select id="kanban-master-filter" class="field__control" aria-label="Фильтр по мастеру" style="max-inline-size: 14rem;">
+            <option value="">Все мастера</option>
+            <option value="unassigned">Без мастера</option>
+          </select>
+          <button type="submit" class="btn btn--outline btn--sm">Фильтр</button>
+        </form>
+      </search>
+    </section>
+
+    <div id="kanban-state-box" hidden></div>
+    <section id="kanban-board" class="kanban-board" aria-label="Колонки статусов заявок"></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Сервисный центр</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

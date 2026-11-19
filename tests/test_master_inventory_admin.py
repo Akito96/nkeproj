@@ -422,3 +422,71 @@ def test_admin_crud_services_employees_users_and_role_guards(
         ).status_code
         == 204
     )
+
+
+def test_admin_stats_endpoint_period_filter_and_role_guard(
+    client: TestClient, full_db: Session
+) -> None:
+    actors = _seed_actors(full_db)
+    _, admin_token = actors["admin"]
+    master_user, master_token = actors["master1"]
+    _, client_token = actors["client"]
+
+    assert (
+        client.get(
+            "/api/admin/stats",
+            headers={"Authorization": f"Bearer {master_token}"},
+        ).status_code
+        == 403
+    )
+
+    order_resp = client.post(
+        "/api/orders",
+        headers={"Authorization": f"Bearer {client_token}"},
+        data={
+            "device_type": "Смартфон",
+            "device_brand": "Apple",
+            "device_model": "iPhone 15",
+            "problem_description": "Замена разбитого дисплея после падения",
+        },
+    )
+    assert order_resp.status_code == 201
+    order_id = order_resp.json()["id"]
+
+    client.patch(
+        f"/api/admin/orders/{order_id}/assign",
+        headers={"Authorization": f"Bearer {admin_token}"},
+        json={"master_id": master_user.id},
+    )
+    client.post(
+        f"/api/master/orders/{order_id}/parts",
+        headers={"Authorization": f"Bearer {master_token}"},
+        json={"labor_cost": "3200.00"},
+    )
+
+    stats_resp = client.get(
+        "/api/admin/stats",
+        headers={"Authorization": f"Bearer {admin_token}"},
+    )
+    assert stats_resp.status_code == 200
+    payload = stats_resp.json()
+    assert payload["summary"]["total_orders"] == 1
+    assert payload["summary"]["total_revenue"] == "3200.00"
+    assert len(payload["by_status"]) == 5
+    assert payload["by_device_type"][0]["device_type"] == "Смартфон"
+    assert payload["by_master"][0]["master_id"] == master_user.id
+
+    invalid_range = client.get(
+        "/api/admin/stats",
+        headers={"Authorization": f"Bearer {admin_token}"},
+        params={"date_from": "2026-12-31", "date_to": "2026-01-01"},
+    )
+    assert invalid_range.status_code == 400
+
+    empty_range = client.get(
+        "/api/admin/stats",
+        headers={"Authorization": f"Bearer {admin_token}"},
+        params={"date_from": "2020-01-01", "date_to": "2020-01-31"},
+    )
+    assert empty_range.status_code == 200
+    assert empty_range.json()["summary"]["total_orders"] == 0

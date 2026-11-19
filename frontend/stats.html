@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статистика мастерской — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/stats.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <div class="section__header">
+      <div>
+        <h1 class="section__title">Статистика и аналитика</h1>
+        <p class="section__subtitle">Показатели выручки, динамики заявок, распределения по статусам и загрузки мастеров</p>
+      </div>
+      <div class="hero__actions">
+        <a class="btn btn--outline btn--sm" href="kanban.html">Kanban-доска</a>
+        <a class="btn btn--outline btn--sm" href="admin.html">Админ-панель</a>
+      </div>
+    </div>
+
+    <section class="card stats-filters" aria-label="Фильтр периода статистики">
+      <div>
+        <span class="field__label" style="display: block; margin-block-end: 0.45rem;">Быстрый выбор периода</span>
+        <div id="period-chips" class="chips-bar" role="group" aria-label="Пресеты периода">
+          <button type="button" class="chip" data-days="7" aria-pressed="false">7 дней</button>
+          <button type="button" class="chip" data-days="30" aria-pressed="true">30 дней</button>
+          <button type="button" class="chip" data-days="90" aria-pressed="false">90 дней</button>
+          <button type="button" class="chip" data-days="all" aria-pressed="false">Всё время</button>
+        </div>
+      </div>
+
+      <search>
+        <form id="stats-period-form" class="date-range-form">
+          <div class="field">
+            <label class="field__label" for="stats-date-from">С даты</label>
+            <input type="date" id="stats-date-from" name="date_from" class="field__control">
+          </div>
+          <div class="field">
+            <label class="field__label" for="stats-date-to">По дату</label>
+            <input type="date" id="stats-date-to" name="date_to" class="field__control">
+          </div>
+          <button type="submit" class="btn btn--primary btn--sm">Применить</button>
+        </form>
+      </search>
+    </section>
+
+    <div id="stats-state-box" hidden></div>
+
+    <div id="stats-content">
+      <section id="stats-kpi-grid" class="kpi-grid" aria-label="Ключевые показатели">
+        <div class="skeleton-row" aria-hidden="true"></div>
+        <div class="skeleton-row" aria-hidden="true"></div>
+        <div class="skeleton-row" aria-hidden="true"></div>
+        <div class="skeleton-row" aria-hidden="true"></div>
+      </section>
+
+      <section class="charts-grid" aria-label="Графики статистики">
+        <article class="chart-card">
+          <div class="chart-card__head">
+            <h2 class="chart-card__title">1. Динамика заявок и выручки</h2>
+            <span class="chart-card__subtitle">По дням за выбранный период</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-daily" aria-label="График динамики заявок и выручки по дням"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-card__head">
+            <h2 class="chart-card__title">2. Распределение по статусам</h2>
+            <span class="chart-card__subtitle">Текущая воронка заказов</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-statuses" aria-label="Диаграмма распределения заявок по статусам"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-card__head">
+            <h2 class="chart-card__title">3. Выручка по типам устройств</h2>
+            <span class="chart-card__subtitle">Сумма заказов (₽)</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-devices" aria-label="Столбчатый график выручки по типам устройств"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-card__head">
+            <h2 class="chart-card__title">4. Загрузка и выручка мастеров</h2>
+            <span class="chart-card__subtitle">Количество заявок на инженера</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-masters" aria-label="График загрузки мастеров по количеству заявок"></canvas>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Сервисный центр</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

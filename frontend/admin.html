@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель администратора — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <div class="section__header">
+      <div>
+        <h1 class="section__title">Панель администратора</h1>
+        <p class="section__subtitle">Управление заявками, пользователями, прайс-листом услуг и складом запчастей</p>
+      </div>
+      <div class="hero__actions">
+        <a class="btn btn--outline btn--sm" href="kanban.html">Kanban-доска</a>
+        <a class="btn btn--outline btn--sm" href="stats.html">Статистика</a>
+        <button type="button" id="admin-refresh-all-btn" class="btn btn--outline btn--sm">Обновить все разделы</button>
+      </div>
+    </div>
+
+    <div class="tabs-container">
+      <div class="tabs-bar" role="tablist" aria-label="Разделы админ-панели">
+        <button type="button" role="tab" id="tab-orders" aria-selected="true">Заявки</button>
+        <button type="button" role="tab" id="tab-users" aria-selected="false">Пользователи</button>
+        <button type="button" role="tab" id="tab-services" aria-selected="false">Услуги</button>
+        <button type="button" role="tab" id="tab-inventory" aria-selected="false">Склад запчастей</button>
+      </div>
+
+      <!-- Panel 1: Orders -->
+      <section role="tabpanel" id="panel-orders" aria-labelledby="tab-orders" tabindex="0">
+        <div class="tabpanel-box">
+          <div class="toolbar">
+            <search>
+              <form id="orders-search-form" class="search-form">
+                <input
+                  type="search"
+                  id="orders-search-input"
+                  class="field__control"
+                  placeholder="Поиск по № заявки, бренду, модели или описанию..."
+                  aria-label="Поиск заявок"
+                  autocorrect="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                >
+                <select id="orders-status-filter" class="field__control" aria-label="Фильтр по статусу" style="max-inline-size: 13rem;">
+                  <option value="">Все статусы</option>
+                  <option value="accepted">Принята</option>
+                  <option value="diagnostics">В диагностике</option>
+                  <option value="in_repair">В ремонте</option>
+                  <option value="ready">Готова к выдаче</option>
+                  <option value="issued">Выдана</option>
+                </select>
+                <button type="submit" class="btn btn--primary btn--sm">Найти</button>
+              </form>
+            </search>
+          </div>
+          <div id="admin-orders-content"></div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Users -->
+      <section role="tabpanel" id="panel-users" aria-labelledby="tab-users" hidden>
+        <div class="tabpanel-box">
+          <div class="toolbar">
+            <search>
+              <form id="users-search-form" class="search-form">
+                <input
+                  type="search"
+                  id="users-search-input"
+                  class="field__control"
+                  placeholder="Поиск по ФИО, e-mail или телефону..."
+                  aria-label="Поиск пользователей"
+                  autocorrect="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                >
+                <select id="users-role-filter" class="field__control" aria-label="Фильтр по роли" style="max-inline-size: 12rem;">
+                  <option value="">Все роли</option>
+                  <option value="client">Клиенты</option>
+                  <option value="master">Мастера</option>
+                  <option value="admin">Администраторы</option>
+                </select>
+                <button type="submit" class="btn btn--outline btn--sm">Фильтр</button>
+              </form>
+            </search>
+            <button type="button" id="add-user-btn" class="btn btn--primary btn--sm">+ Добавить пользователя</button>
+          </div>
+          <div id="admin-users-content"></div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Services -->
+      <section role="tabpanel" id="panel-services" aria-labelledby="tab-services" hidden>
+        <div class="tabpanel-box">
+          <div class="toolbar">
+            <search>
+              <form id="admin-services-search-form" class="search-form">
+                <input
+                  type="search"
+                  id="admin-services-search-input"
+                  class="field__control"
+                  placeholder="Поиск услуги по названию или категории..."
+                  aria-label="Поиск услуг"
+                  autocorrect="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                >
+                <button type="submit" class="btn btn--outline btn--sm">Найти</button>
+              </form>
+            </search>
+            <button type="button" id="add-service-btn" class="btn btn--primary btn--sm">+ Добавить услугу</button>
+          </div>
+          <div id="admin-services-content"></div>
+        </div>
+      </section>
+
+      <!-- Panel 4: Inventory -->
+      <section role="tabpanel" id="panel-inventory" aria-labelledby="tab-inventory" hidden>
+        <div class="tabpanel-box">
+          <div class="toolbar">
+            <search>
+              <form id="inventory-search-form" class="search-form">
+                <input
+                  type="search"
+                  id="inventory-search-input"
+                  class="field__control"
+                  placeholder="Поиск запчасти по наименованию или SKU..."
+                  aria-label="Поиск по складу запчастей"
+                  autocorrect="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                >
+                <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; white-space: nowrap; cursor: pointer;">
+                  <input type="checkbox" id="inventory-low-stock-checkbox" style="inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--color-primary);">
+                  <span>Только низкий остаток</span>
+                </label>
+                <button type="submit" class="btn btn--outline btn--sm">Применить</button>
+              </form>
+            </search>
+            <div class="hero__actions">
+              <button type="button" id="open-movement-btn" class="btn btn--outline btn--sm">Движение склада</button>
+              <button type="button" id="add-part-btn" class="btn btn--primary btn--sm">+ Добавить запчасть</button>
+            </div>
+          </div>
+          <div id="admin-inventory-content"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal: Assign Master -->
+  <dialog id="assign-master-modal" class="modal-dialog" closedby="any" aria-labelledby="assign-master-title">
+    <div class="modal-header">
+      <h2 id="assign-master-title" class="modal-title">Назначение мастера на заявку</h2>
+      <button type="button" class="modal-close" data-close-dialog="assign-master-modal" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="assign-master-form" class="modal-body" novalidate>
+      <input type="hidden" id="assign-order-id">
+      <p id="assign-order-summary" class="field__hint"></p>
+      <div class="field">
+        <label class="field__label" for="assign-master-select">Выберите мастера <span aria-hidden="true">*</span></label>
+        <select id="assign-master-select" class="field__control" required data-error="assign-master-error"></select>
+        <span id="assign-master-error" class="field__error">Выберите активного мастера.</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--outline btn--sm" data-close-dialog="assign-master-modal">Отмена</button>
+        <button type="submit" id="assign-submit-btn" class="btn btn--primary btn--sm">Назначить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: User Create / Edit -->
+  <dialog id="user-modal" class="modal-dialog" closedby="closerequest" aria-labelledby="user-modal-title">
+    <div class="modal-header">
+      <h2 id="user-modal-title" class="modal-title">Пользователь</h2>
+      <button type="button" class="modal-close" data-close-dialog="user-modal" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="user-modal-form" class="modal-body" novalidate>
+      <input type="hidden" id="user-edit-id">
+      <div class="field">
+        <label class="field__label" for="user-full-name">ФИО <span aria-hidden="true">*</span></label>
+        <input type="text" id="user-full-name" class="field__control" minlength="2" maxlength="120" required autofocus data-error="user-name-error">
+        <span id="user-name-error" class="field__error">Введите ФИО (минимум 2 символа).</span>
+      </div>
+      <div class="field">
+        <label class="field__label" for="user-email">E-mail <span aria-hidden="true">*</span></label>
+        <input type="email" id="user-email" class="field__control" required autocorrect="off" autocapitalize="none" spellcheck="false" data-error="user-email-error">
+        <span id="user-email-error" class="field__error">Укажите корректный e-mail.</span>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="user-phone">Телефон <span aria-hidden="true">*</span></label>
+          <input type="tel" id="user-phone" class="field__control" minlength="7" maxlength="20" required data-error="user-phone-error">
+          <span id="user-phone-error" class="field__error">Введите телефон (от 7 цифр).</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="user-role">Роль <span aria-hidden="true">*</span></label>
+          <select id="user-role" class="field__control" required>
+            <option value="client">Клиент</option>
+            <option value="master">Мастер</option>
+            <option value="admin">Администратор</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="user-password">Пароль <span id="user-password-req">*</span></label>
+        <input type="password" id="user-password" class="field__control" minlength="6" maxlength="128" data-error="user-password-error">
+        <span id="user-password-hint" class="field__hint">Минимум 6 символов.</span>
+        <span id="user-password-error" class="field__error">Пароль должен содержать от 6 до 128 символов.</span>
+      </div>
+      <div id="user-active-wrap" class="field">
+        <label style="display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer;">
+          <input type="checkbox" id="user-is-active" checked style="inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--color-primary);">
+          <span>Учётная запись активна</span>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--outline btn--sm" data-close-dialog="user-modal">Отмена</button>
+        <button type="submit" id="user-save-btn" class="btn btn--primary btn--sm">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Service Create / Edit -->
+  <dialog id="service-modal" class="modal-dialog" closedby="closerequest" aria-labelledby="service-modal-title">
+    <div class="modal-header">
+      <h2 id="service-modal-title" class="modal-title">Услуга</h2>
+      <button type="button" class="modal-close" data-close-dialog="service-modal" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="service-modal-form" class="modal-body" novalidate>
+      <input type="hidden" id="service-edit-id">
+      <div class="field">
+        <label class="field__label" for="service-title">Название услуги <span aria-hidden="true">*</span></label>
+        <input type="text" id="service-title" class="field__control" minlength="2" maxlength="150" required autofocus data-error="service-title-error">
+        <span id="service-title-error" class="field__error">Укажите название (от 2 символов).</span>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="service-category">Категория <span aria-hidden="true">*</span></label>
+          <input type="text" id="service-category" class="field__control" list="service-categories-list" minlength="2" maxlength="80" required data-error="service-category-error">
+          <datalist id="service-categories-list">
+            <option value="Смартфоны"></option>
+            <option value="Ноутбуки"></option>
+            <option value="Планшеты"></option>
+            <option value="ПК"></option>
+            <option value="Пайка BGA"></option>
+          </datalist>
+          <span id="service-category-error" class="field__error">Укажите категорию.</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="service-price">Базовая цена (₽) <span aria-hidden="true">*</span></label>
+          <input type="number" id="service-price" class="field__control" min="0" step="0.01" required data-error="service-price-error">
+          <span id="service-price-error" class="field__error">Укажите неотрицательную цену.</span>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="service-warranty">Гарантия (дней) <span aria-hidden="true">*</span></label>
+          <input type="number" id="service-warranty" class="field__control" min="0" step="1" value="30" required data-error="service-warranty-error">
+          <span id="service-warranty-error" class="field__error">Укажите срок гарантии.</span>
+        </div>
+        <div class="field" style="justify-content: flex-end;">
+          <label style="display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer;">
+            <input type="checkbox" id="service-active" checked style="inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--color-primary);">
+            <span>Активна в каталоге</span>
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="service-desc">Описание</label>
+        <textarea id="service-desc" class="field__control" rows="2"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--outline btn--sm" data-close-dialog="service-modal">Отмена</button>
+        <button type="submit" id="service-save-btn" class="btn btn--primary btn--sm">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Part Create / Edit -->
+  <dialog id="part-modal" class="modal-dialog" closedby="closerequest" aria-labelledby="part-modal-title">
+    <div class="modal-header">
+      <h2 id="part-modal-title" class="modal-title">Запчасть</h2>
+      <button type="button" class="modal-close" data-close-dialog="part-modal" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="part-modal-form" class="modal-body" novalidate>
+      <input type="hidden" id="part-edit-id">
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="part-sku">Артикул (SKU) <span aria-hidden="true">*</span></label>
+          <input type="text" id="part-sku" class="field__control" minlength="2" maxlength="64" required autofocus autocorrect="off" autocapitalize="none" spellcheck="false" data-error="part-sku-error">
+          <span id="part-sku-error" class="field__error">Укажите SKU (от 2 символов).</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="part-category">Категория <span aria-hidden="true">*</span></label>
+          <input type="text" id="part-category" class="field__control" minlength="2" maxlength="80" required data-error="part-category-error">
+          <span id="part-category-error" class="field__error">Укажите категорию.</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="part-name">Наименование <span aria-hidden="true">*</span></label>
+        <input type="text" id="part-name" class="field__control" minlength="2" maxlength="180" required data-error="part-name-error">
+        <span id="part-name-error" class="field__error">Укажите наименование (от 2 символов).</span>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="part-purchase-price">Закупочная цена (₽) <span aria-hidden="true">*</span></label>
+          <input type="number" id="part-purchase-price" class="field__control" min="0" step="0.01" required data-error="part-purchase-error">
+          <span id="part-purchase-error" class="field__error">Укажите неотрицательную цену.</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="part-retail-price">Отпускная цена (₽) <span aria-hidden="true">*</span></label>
+          <input type="number" id="part-retail-price" class="field__control" min="0" step="0.01" required data-error="part-retail-error">
+          <span id="part-retail-error" class="field__error">Укажите неотрицательную цену.</span>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="part-stock-qty">Остаток на складе <span aria-hidden="true">*</span></label>
+          <input type="number" id="part-stock-qty" class="field__control" min="0" step="1" value="0" required data-error="part-stock-error">
+          <span id="part-stock-error" class="field__error">Остаток не может быть меньше 0.</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="part-min-qty">Мин. порог остатка <span aria-hidden="true">*</span></label>
+          <input type="number" id="part-min-qty" class="field__control" min="0" step="1" value="2" required data-error="part-min-error">
+          <span id="part-min-error" class="field__error">Порог не может быть меньше 0.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--outline btn--sm" data-close-dialog="part-modal">Отмена</button>
+        <button type="submit" id="part-save-btn" class="btn btn--primary btn--sm">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Stock Movement -->
+  <dialog id="movement-modal" class="modal-dialog" closedby="any" aria-labelledby="movement-modal-title">
+    <div class="modal-header">
+      <h2 id="movement-modal-title" class="modal-title">Движение запчасти по складу</h2>
+      <button type="button" class="modal-close" data-close-dialog="movement-modal" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="movement-modal-form" class="modal-body" novalidate>
+      <div class="field">
+        <label class="field__label" for="movement-part-select">Запчасть <span aria-hidden="true">*</span></label>
+        <select id="movement-part-select" class="field__control" required data-error="movement-part-error"></select>
+        <span id="movement-part-error" class="field__error">Выберите запчасть.</span>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="movement-type-select">Тип операции <span aria-hidden="true">*</span></label>
+          <select id="movement-type-select" class="field__control" required>
+            <option value="in">Приход (+)</option>
+            <option value="out">Расход (-)</option>
+            <option value="return">Возврат на склад (+)</option>
+            <option value="write_off">Списание (-)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="movement-qty-input">Количество <span aria-hidden="true">*</span></label>
+          <input type="number" id="movement-qty-input" class="field__control" min="1" step="1" value="1" required data-error="movement-qty-error">
+          <span id="movement-qty-error" class="field__error">Укажите целое положительное число.</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="movement-reason-input">Основание операции</label>
+        <input type="text" id="movement-reason-input" class="field__control" maxlength="255" placeholder="Накладная поставщика или инвентаризация">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--outline btn--sm" data-close-dialog="movement-modal">Отмена</button>
+        <button type="submit" id="movement-save-btn" class="btn btn--primary btn--sm">Провести операцию</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Delete Confirmation -->
+  <dialog id="confirm-delete-modal" class="modal-dialog" closedby="closerequest" aria-labelledby="confirm-delete-title">
+    <div class="modal-header">
+      <h2 id="confirm-delete-title" class="modal-title">Подтверждение удаления</h2>
+      <button type="button" class="modal-close" data-close-dialog="confirm-delete-modal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirm-delete-message">Вы действительно хотите удалить эту запись? Действие необратимо.</p>
+      <div class="modal-footer">
+        <button type="button" id="confirm-delete-btn" class="btn btn--danger btn--sm">Удалить</button>
+        <button type="button" class="btn btn--outline btn--sm" data-close-dialog="confirm-delete-modal" autofocus>Отмена</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Сервисный центр</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

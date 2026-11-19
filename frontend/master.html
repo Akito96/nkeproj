@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рабочее место мастера — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/master.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <div class="section__header">
+      <div>
+        <h1 class="section__title">Рабочее место мастера</h1>
+        <p id="master-subtitle" class="section__subtitle">Назначенные вам заявки: смена этапов, диагностика, комментарии и списание запчастей</p>
+      </div>
+      <button type="button" id="refresh-master-btn" class="btn btn--outline btn--sm">Обновить данные</button>
+    </div>
+
+    <section aria-label="Поиск и фильтрация заявок" class="toolbar" style="margin-block-end: 1.25rem;">
+      <search>
+        <form id="master-search-form" class="search-form">
+          <input
+            type="search"
+            id="master-search-input"
+            class="field__control"
+            placeholder="Поиск по № заявки, бренду или модели..."
+            aria-label="Поиск по назначенным заявкам"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+          >
+          <button type="submit" class="btn btn--primary btn--sm">Найти</button>
+        </form>
+      </search>
+
+      <div id="master-status-chips" class="chips-bar" role="group" aria-label="Фильтр статуса">
+        <button type="button" class="chip" data-status="" aria-pressed="true">Все</button>
+        <button type="button" class="chip" data-status="accepted" aria-pressed="false">Принята</button>
+        <button type="button" class="chip" data-status="diagnostics" aria-pressed="false">В диагностике</button>
+        <button type="button" class="chip" data-status="in_repair" aria-pressed="false">В ремонте</button>
+        <button type="button" class="chip" data-status="ready" aria-pressed="false">Готова к выдаче</button>
+        <button type="button" class="chip" data-status="issued" aria-pressed="false">Выдана</button>
+      </div>
+    </section>
+
+    <div class="dashboard-layout">
+      <section aria-label="Список назначенных заявок">
+        <div id="master-orders-list" class="orders-column">
+          <div class="skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton-row" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section aria-label="Работа с выбранной заявкой">
+        <div id="master-order-workspace" class="card detail-panel">
+          <div class="state-box">
+            <p class="state-box__title">Выберите заявку</p>
+            <p class="state-box__desc">Нажмите на карточку заявки слева, чтобы открыть диагностику, смену статуса и подбор запчастей со склада.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Сервисный центр</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

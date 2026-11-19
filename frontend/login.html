@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в систему — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/login.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <section class="auth-shell card" aria-labelledby="login-title">
+      <h1 id="login-title" class="auth-card__title">Вход в систему</h1>
+      <p class="auth-card__subtitle">Авторизуйтесь как клиент, мастер или администратор</p>
+
+      <div id="login-server-error" class="server-alert" role="alert" hidden></div>
+
+      <form id="login-form" class="form-stack" novalidate>
+        <div class="field">
+          <label for="login-email">Электронная почта</label>
+          <span id="login-email-hint" class="hint">Формат: name@example.com</span>
+          <input
+            type="email"
+            id="login-email"
+            name="email"
+            autocomplete="username"
+            spellcheck="false"
+            required
+            enterkeyhint="next"
+            aria-describedby="login-email-hint"
+            data-error="login-email-error"
+            placeholder="client1@repair.ru"
+          >
+          <div id="login-email-error" class="error-msg">
+            <span role="img" aria-label="Ошибка">❌</span> Укажите корректный адрес электронной почты.
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="login-password">Пароль</label>
+          <span id="login-password-hint" class="hint">Минимум 6 символов</span>
+          <div class="input-group">
+            <input
+              type="password"
+              id="login-password"
+              name="password"
+              autocomplete="current-password"
+              minlength="6"
+              required
+              enterkeyhint="done"
+              aria-describedby="login-password-hint"
+              data-error="login-password-error"
+              placeholder="Введите пароль"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              aria-controls="login-password"
+              aria-pressed="false"
+              aria-label="Показать пароль"
+            >Показать</button>
+          </div>
+          <div id="login-password-error" class="error-msg">
+            <span role="img" aria-label="Ошибка">❌</span> Пароль должен содержать минимум 6 символов.
+          </div>
+        </div>
+
+        <button id="login-submit" type="submit" class="btn btn--primary btn--full">Войти</button>
+      </form>
+
+      <div class="demo-box">
+        <span class="demo-box__title">Быстрый вход для проверки (тестовые данные seed.py):</span>
+        <div class="demo-box__actions">
+          <button type="button" class="btn btn--outline btn--sm demo-fill-btn" data-email="client1@repair.ru">Клиент</button>
+          <button type="button" class="btn btn--outline btn--sm demo-fill-btn" data-email="master1@repair.ru">Мастер</button>
+          <button type="button" class="btn btn--outline btn--sm demo-fill-btn" data-email="admin@repair.ru">Админ</button>
+        </div>
+      </div>
+
+      <p class="auth-footer">
+        Нет учётной записи? <a href="register.html">Зарегистрироваться как клиент</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Ремонтная мастерская</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

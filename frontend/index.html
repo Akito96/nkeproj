@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>РемМастер — Сервисный центр по ремонту электроники</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/home.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <section class="hero-banner" aria-labelledby="hero-title">
+      <div>
+        <h1 id="hero-title" class="hero-banner__title">Сервисный центр по ремонту смартфонов, ноутбуков и ПК</h1>
+        <p class="hero-banner__lead">
+          Принимаем устройства с фотофиксацией состояния, проводим точную диагностику до начала работ
+          и ведём историю каждого ремонта в личном кабинете.
+        </p>
+
+        <div class="hero-trust-strip">
+          <span>Диагностика от 30 минут</span>
+          <span>Запчасти в наличии</span>
+          <span>Гарантия до 180 дней</span>
+        </div>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="services.html">Выбрать услугу и цену</a>
+          <a id="hero-auth-cta" class="btn btn--outline" href="login.html">Войти в кабинет</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <img
+          class="hero-photo"
+          src="img/hero-repair.jpg"
+          alt="Рабочее место инженера сервисного центра с микроскопом и паяльной станцией"
+          width="600"
+          height="375"
+        >
+        <aside class="ticket-preview" aria-label="Этапы отслеживания заявки">
+          <div class="ticket-preview__head">
+            <span>Статусы заказа в личном кабинете</span>
+            <span style="color: var(--color-primary);">Онлайн-контроль</span>
+          </div>
+          <div id="hero-status-badges" class="status-row"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="directions-title">
+      <div class="section__header">
+        <div>
+          <h2 id="directions-title" class="section__title">Основные направления мастерской</h2>
+          <p class="section__subtitle">Оборудованные посты под модульный и компонентный ремонт</p>
+        </div>
+      </div>
+
+      <div class="workshop-gallery">
+        <a class="gallery-card" href="services.html">
+          <img
+            class="gallery-card__img"
+            src="img/cat-smartphones.jpg"
+            alt="Внутренние компоненты и плата смартфона при разборке"
+            loading="lazy"
+            width="480"
+            height="300"
+          >
+          <div class="gallery-card__caption">
+            <span class="gallery-card__title">Смартфоны и планшеты</span>
+            <span class="gallery-card__link">К ценам →</span>
+          </div>
+        </a>
+
+        <a class="gallery-card" href="services.html">
+          <img
+            class="gallery-card__img"
+            src="img/cat-laptops.jpg"
+            alt="Разборка и обслуживание материнской платы ноутбука"
+            loading="lazy"
+            width="480"
+            height="300"
+          >
+          <div class="gallery-card__caption">
+            <span class="gallery-card__title">Ноутбуки и системы охлаждения</span>
+            <span class="gallery-card__link">К ценам →</span>
+          </div>
+        </a>
+
+        <a class="gallery-card" href="services.html">
+          <img
+            class="gallery-card__img"
+            src="img/cat-bga.jpg"
+            alt="Пайка электронных компонентов на печатной плате"
+            loading="lazy"
+            width="480"
+            height="300"
+          >
+          <div class="gallery-card__caption">
+            <span class="gallery-card__title">Пайка BGA и ремонт плат</span>
+            <span class="gallery-card__link">К ценам →</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="popular-title">
+      <div class="section__header">
+        <div>
+          <h2 id="popular-title" class="section__title">Прайс-лист популярных услуг</h2>
+          <p class="section__subtitle">Актуальные базовые цены из базы данных мастерской</p>
+        </div>
+        <a class="btn btn--outline btn--sm" href="services.html">Все услуги</a>
+      </div>
+
+      <div id="home-services-container" class="price-list">
+        <div class="skeleton-row" aria-hidden="true"></div>
+        <div class="skeleton-row" aria-hidden="true"></div>
+        <div class="skeleton-row" aria-hidden="true"></div>
+        <div class="skeleton-row" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Сервисный центр</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>

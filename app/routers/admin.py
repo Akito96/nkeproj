@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
@@ -7,6 +8,7 @@ from app.core.database import get_db
 from app.core.security import require_role
 from app.models import RepairRequest, RequestStatus, Service, User, UserRole
 from app.schemas import (
+    AdminStatsResponse,
     OrderAssignMasterRequest,
     RepairRequestDetailRead,
     RepairRequestRead,
@@ -17,9 +19,37 @@ from app.schemas import (
     UserRead,
     UserUpdate,
 )
-from app.services import order_service, service_catalog_service, user_service
+from app.services import (
+    order_service,
+    service_catalog_service,
+    stats_service,
+    user_service,
+)
 
 router = APIRouter(prefix="/admin", tags=["Администрирование"])
+
+
+@router.get(
+    "/stats",
+    response_model=AdminStatsResponse,
+    summary="Агрегированная статистика мастерской за период",
+)
+def get_admin_statistics(
+    _admin: Annotated[User, Depends(require_role("admin"))],
+    db: Annotated[Session, Depends(get_db)],
+    date_from: Annotated[
+        date | None, Query(description="Начало периода (YYYY-MM-DD)")
+    ] = None,
+    date_to: Annotated[
+        date | None, Query(description="Конец периода (YYYY-MM-DD)")
+    ] = None,
+) -> AdminStatsResponse:
+    """Возвращает сводные показатели и данные для графиков администратора."""
+    return stats_service.get_admin_stats(
+        db=db,
+        date_from=date_from,
+        date_to=date_to,
+    )
 
 
 @router.get(

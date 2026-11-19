@@ -32,6 +32,14 @@ from app.schemas.service import (
     ServiceRead,
     ServiceUpdate,
 )
+from app.schemas.stats import (
+    AdminStatsResponse,
+    StatsDailyPoint,
+    StatsDeviceTypeItem,
+    StatsMasterItem,
+    StatsStatusItem,
+    StatsSummary,
+)
 from app.schemas.user import (
     LoginRequest,
     TokenResponse,
@@ -41,6 +49,7 @@ from app.schemas.user import (
 )
 
 __all__ = [
+    "AdminStatsResponse",
     "HealthResponse",
     "LoginRequest",
     "MasterCommentCreate",
@@ -65,6 +74,11 @@ __all__ = [
     "ServiceListResponse",
     "ServiceRead",
     "ServiceUpdate",
+    "StatsDailyPoint",
+    "StatsDeviceTypeItem",
+    "StatsMasterItem",
+    "StatsStatusItem",
+    "StatsSummary",
     "StatusHistoryRead",
     "StockMovementCreate",
     "StockMovementRead",

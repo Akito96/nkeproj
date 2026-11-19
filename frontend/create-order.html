@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новая заявка — РемМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/create-order.js" defer></script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main class="container">
+    <div class="section__header">
+      <div>
+        <h1 class="section__title">Оформление заявки на ремонт</h1>
+        <p class="section__subtitle">Опишите неисправность и прикрепите до 5 фотографий устройства</p>
+      </div>
+      <a class="btn btn--outline btn--sm" href="client.html">К моим заявкам</a>
+    </div>
+
+    <div id="order-page-loading" class="card" aria-live="polite">
+      <div class="skeleton-row" aria-hidden="true"></div>
+      <div class="skeleton-row" aria-hidden="true"></div>
+    </div>
+
+    <section id="order-form-card" class="card" hidden>
+      <form id="create-order-form" class="form" novalidate enctype="multipart/form-data">
+        <div class="field">
+          <label class="field__label" for="order-service">Услуга из прайс-листа (необязательно)</label>
+          <select id="order-service" name="service_id" class="field__control">
+            <option value="">Выбрать позже после диагностики</option>
+          </select>
+          <div id="services-load-status" class="field__hint"></div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="field">
+            <label class="field__label" for="device-type">Тип устройства <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="device-type"
+              name="device_type"
+              class="field__control"
+              list="device-types-list"
+              placeholder="Например, Смартфон"
+              minlength="2"
+              maxlength="80"
+              required
+              data-error="device-type-error"
+            >
+            <datalist id="device-types-list">
+              <option value="Смартфон"></option>
+              <option value="Ноутбук"></option>
+              <option value="Планшет"></option>
+              <option value="ПК"></option>
+              <option value="Моноблок"></option>
+            </datalist>
+            <span id="device-type-error" class="field__error">Укажите тип устройства (минимум 2 символа).</span>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="device-brand">Бренд <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="device-brand"
+              name="device_brand"
+              class="field__control"
+              placeholder="Apple, Samsung, Asus..."
+              minlength="1"
+              maxlength="80"
+              required
+              data-error="device-brand-error"
+            >
+            <span id="device-brand-error" class="field__error">Укажите бренд устройства.</span>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="field">
+            <label class="field__label" for="device-model">Модель <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="device-model"
+              name="device_model"
+              class="field__control"
+              placeholder="iPhone 14 Pro, ROG Strix G16..."
+              minlength="1"
+              maxlength="120"
+              required
+              data-error="device-model-error"
+            >
+            <span id="device-model-error" class="field__error">Укажите модель устройства.</span>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="serial-number">Серийный номер / IMEI</label>
+            <input
+              type="text"
+              id="serial-number"
+              name="serial_number"
+              class="field__control"
+              placeholder="Необязательно"
+              maxlength="100"
+              autocorrect="off"
+              autocapitalize="none"
+              spellcheck="false"
+            >
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="appearance">Внешний вид и комплектация</label>
+          <input
+            type="text"
+            id="appearance"
+            name="appearance"
+            class="field__control"
+            placeholder="Например: потёртости на гранях, без блока питания"
+            maxlength="255"
+          >
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="problem-description">Описание неисправности <span aria-hidden="true">*</span></label>
+          <textarea
+            id="problem-description"
+            name="problem_description"
+            class="field__control"
+            rows="4"
+            placeholder="Опишите симптомы, когда появилась проблема и что пробовали делать"
+            minlength="5"
+            required
+            data-error="problem-description-error"
+          ></textarea>
+          <span id="problem-description-error" class="field__error">Опишите неисправность подробнее (минимум 5 символов).</span>
+        </div>
+
+        <div class="field">
+          <div class="photo-upload-zone">
+            <div class="photo-upload-head">
+              <label class="field__label" for="order-photos">Фотографии устройства (до 5 шт.)</label>
+              <span id="photos-counter" class="photo-upload-count">Выбрано: 0 из 5</span>
+            </div>
+            <input
+              type="file"
+              id="order-photos"
+              name="photos"
+              class="field__control"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              multiple
+              aria-describedby="photos-hint photos-error"
+            >
+            <span id="photos-hint" class="field__hint">Допустимые форматы: JPG, PNG, WEBP. Максимальный размер файла — 5 МБ.</span>
+            <span id="photos-error" class="field__error" style="display: none;"></span>
+            <div id="photos-preview-grid" class="photo-preview-grid" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div id="order-form-error" class="state-box" style="display: none; padding: 0.9rem; border: 1px solid #fecaca; background: #fef2f2; border-radius: var(--radius-sm);">
+          <p class="state-box__title" style="color: var(--color-danger);">Ошибка отправки заявки</p>
+          <p id="order-form-error-text" class="state-box__desc"></p>
+        </div>
+
+        <div class="hero__actions">
+          <button type="submit" id="submit-order-btn" class="btn btn--primary">Отправить заявку</button>
+          <button type="reset" id="reset-order-btn" class="btn btn--outline">Очистить форму</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 РемМастер — Сервисный центр</span>
+      <span>Пн–Сб: 09:00 – 20:00</span>
+    </div>
+  </footer>
+</body>
+</html>
