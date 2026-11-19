@@ -34,3 +34,13 @@ def test_frontend_pages_and_assets_served(client: TestClient) -> None:
     for path in paths:
         response = client.get(path)
         assert response.status_code == 200, f"Не удалось загрузить {path}"
+
+
+def test_root_redirects_to_index(client: TestClient) -> None:
+    response = client.get("/", follow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers["location"] == "/app/index.html"
+
+    followed = client.get("/", follow_redirects=True)
+    assert followed.status_code == 200
+    assert "РемМастер" in followed.text

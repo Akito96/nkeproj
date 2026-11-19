@@ -2,6 +2,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
@@ -31,6 +32,11 @@ def create_app() -> FastAPI:
             StaticFiles(directory=frontend_dir, html=True),
             name="frontend",
         )
+
+    @app.get("/", include_in_schema=False)
+    def root_redirect() -> RedirectResponse:
+        """Перенаправляет корневой URL на главную страницу фронтенда."""
+        return RedirectResponse(url="/app/index.html", status_code=307)
 
     app.include_router(health.router, prefix=settings.api_prefix)
     app.include_router(auth.router, prefix=settings.api_prefix)
